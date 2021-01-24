@@ -25,7 +25,7 @@ class CategoryRadio extends React.Component {
     }
     renderInput(name) {
         return (
-            <label>
+            <label key={name}>
                 <input onChange={this.onValueChange}
                        type="radio"
                        value={name}
