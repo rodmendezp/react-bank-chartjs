@@ -30,18 +30,15 @@ class HistoricPlot extends React.Component {
             },
             legend: { display: false },
             scales: {
-                yAxes: [
-                    {
+                yAxes: [{
                         type: "category",
-                        labels: this.categoryCategories(this.props.category)
-                    }
-                ],
-                xAxes: [
-                    {
+                        labels: this.categoryCategories(this.props.category),
+                        offset: true
+                    }],
+                xAxes: [{
                         type: "time",
-                        time: { minUnit: "day" }
-                    }
-                ]
+                        time: { minUnit: "day" },
+                    }]
             }
         }
     }
