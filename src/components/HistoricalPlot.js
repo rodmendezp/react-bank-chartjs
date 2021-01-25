@@ -44,18 +44,16 @@ class HistoricPlot extends React.Component {
     }
     render() {
         let scatterData = {
-            datasets: [
-                {
-                    borderColor: "rgba(0,0,0,1)",
-                    borderWidth: 1,
-                    pointBackgroundColor: (context) => {
-                        const index = context.dataIndex;
-                        const value = context.dataset.data[index];
-                        return value.y > 1 ? "red" : "green";
-                    },
-                    data: this.transactionToPlotData(this.props.transactions, this.props.category)
-                }
-            ]
+            datasets: [{
+                borderColor: "rgba(0,0,0,1)",
+                borderWidth: 1,
+                pointBackgroundColor: (context) => {
+                    const index = context.dataIndex;
+                    const value = context.dataset.data[index];
+                    return value.y > 1 ? "red" : "green";
+                },
+                data: this.transactionToPlotData(this.props.transactions, this.props.category)
+            }]
         }
         return (
             <div>
