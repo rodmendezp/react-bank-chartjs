@@ -1,9 +1,10 @@
 import './App.css';
 import React from "react";
-import HistoricPlot from "./HistoricalPlot";
+import HistoricPlot from "./components/HistoricalPlot";
 import { jsonTransactions } from "./mockdata";
-import { parseTransactions } from "./Transaction"
-import CategoryRadio from "./CategoryRadio";
+import { parseTransactions, transactionBalance } from "./Transaction"
+import CategoryRadio from "./components/CategoryRadio";
+import DoughnutTransPlot from "./components/DoughnutTransPlot";
 
 function defaultCategory(transactions) {
     if (transactions.get("check").length > 0) return "check"
@@ -15,6 +16,8 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         let transactions = parseTransactions(jsonTransactions)
+        let balance = transactionBalance(transactions)
+        console.log(balance)
         let category = defaultCategory(transactions)
         this.state = {
             category: category,
@@ -27,6 +30,7 @@ class App extends React.Component {
             <div className="App">
                 <CategoryRadio category={this.state.category} onValueChange={this.handleCategoryChange}/>
                 <HistoricPlot transactions={this.state.transactions} category={this.state.category}/>
+                <DoughnutTransPlot/>
             </div>
         );
     }
