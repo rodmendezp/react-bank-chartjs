@@ -18,13 +18,30 @@ export function transactionBalance(transactions) {
             ['intCred', 0]
         ]
     )
-    for (let [cat, value] of transactions) {
-        for (let trans of value) {
-            let amount = (cat !== 'intCred') ? trans.amount : trans.int_amount
-            balance.set(cat, balance.get(cat) + amount * categoryTransSign.get(cat).get(trans.type))
+    for (let [cat, trans] of transactions) {
+        for (let tran of trans) {
+            let amount = (cat !== 'intCred') ? tran.amount : tran.int_amount
+            balance.set(cat, balance.get(cat) + amount * categoryTransSign.get(cat).get(tran.type))
         }
     }
     return balance
+}
+
+export function categoryTotals(transactions) {
+    let totals = new Map([
+        ['check', new Map([])],
+        ['natCred', new Map([])],
+        ['intCred',new Map([])],
+    ])
+    for (let [cat, trans] of transactions) {
+        let catTotals = totals.get(cat)
+        for (let tran of trans) {
+            let curr = (catTotals.has(tran.type)) ? catTotals.get(tran.type) : 0
+            let amount = (cat !== 'intCred') ? tran.amount : tran.int_amount
+            catTotals.set(tran.type, curr + amount)
+        }
+    }
+    return totals
 }
 
 export function parseTransactions(jsonTransactions) {
