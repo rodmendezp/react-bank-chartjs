@@ -2,7 +2,7 @@ import React from "react";
 import { Scatter } from "react-chartjs-2";
 // eslint-disable-next-line no-unused-vars
 import * as Zoom from "chartjs-plugin-zoom";
-import * as consts from "./consts.js";
+import * as consts from "../consts.js";
 
 class HistoricPlot extends React.Component {
     constructor(props) {
