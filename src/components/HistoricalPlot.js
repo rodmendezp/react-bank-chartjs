@@ -11,10 +11,10 @@ class HistoricPlot extends React.Component {
     }
     transactionToPlotData(transactions, category) {
         let data = transactions.get(category)
-        let categories = this.categoryCategories(category)
+        let categories = this.categoryTypes(category)
         return data.map((t) => ({x: t.mail_dtime, y: categories.indexOf(t.type)}))
     }
-    categoryCategories(category) {
+    categoryTypes(category) {
         if (category === "check")
             return Array.from(consts.CHECK_CATEGORIES)
         if (category === "natCred")
@@ -32,7 +32,7 @@ class HistoricPlot extends React.Component {
             scales: {
                 yAxes: [{
                         type: "category",
-                        labels: this.categoryCategories(this.props.category),
+                        labels: this.categoryTypes(this.props.category),
                         offset: true
                     }],
                 xAxes: [{
