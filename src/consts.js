@@ -39,3 +39,27 @@ export const mapJsonTransName = new Map([
     ['INT_CRED_PAY', INT_CRED_PAY],
     ['INT_CRED_WITHDRAW', INT_CRED_WITHDRAW]
 ])
+
+export const categoryTransSign = new Map([
+    ["check", new Map([
+        [CHECK_EXPENSE, -1],
+        [CHECK_TRANSFER, -1],
+        [CHECK_WITHDRAW, -1],
+        [NAT_CRED_PAY, -1],
+        [INT_CRED_PAY, -1]
+        ]
+    )],
+    ['natCred', new Map([
+        [NAT_CRED_EXPENSE, -1],
+        [NAT_CRED_WITHDRAW, -1],
+        [NAT_CRED_PAY, 1]
+        ]
+    )],
+    ['intCred', new Map([
+        [INT_CRED_EXPENSE, -1],
+        [INT_CRED_WITHDRAW, -1],
+        [INT_CRED_PAY, 1]
+        ])
+    ]
+    ]
+)
