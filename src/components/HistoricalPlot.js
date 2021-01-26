@@ -52,12 +52,14 @@ class HistoricPlot extends React.Component {
                     const value = context.dataset.data[index];
                     return value.y > 1 ? "red" : "green";
                 },
+                pointStyle: 'triangle',
+                pointRadius: 5,
                 data: this.transactionToPlotData(this.props.transactions, this.props.category)
             }]
         }
         return (
             <div>
-                <Scatter
+                <Scatter height={50}
                     data={scatterData}
                     options={this.plotOptions()}
                 />

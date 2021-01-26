@@ -21,7 +21,7 @@ class DoughnutTransPlot extends React.Component {
         }
         return (
             <div>
-                <Doughnut data={pieData}/>
+                <Doughnut height={50} data={pieData}/>
             </div>
         )
     }
