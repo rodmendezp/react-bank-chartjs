@@ -7,6 +7,10 @@ import * as consts from "../consts.js";
 class HistoricPlot extends React.Component {
     constructor(props) {
         super(props);
+        this.divStyle = {
+            "max-width": "80%",
+            "margin": "auto"
+        }
         this.plotOptions = this.plotOptions.bind(this)
     }
     transactionToPlotData(transactions, category) {
@@ -23,6 +27,7 @@ class HistoricPlot extends React.Component {
     }
     plotOptions() {
         return {
+            aspectRatio: 4.5,
             plugins: {
                 zoom: {
                     zoom: { enabled: true, mode: "x", sensitivity: 3}
@@ -58,8 +63,8 @@ class HistoricPlot extends React.Component {
             }]
         }
         return (
-            <div>
-                <Scatter height={50}
+            <div style={this.divStyle}>
+                <Scatter height={null} width={null}
                     data={scatterData}
                     options={this.plotOptions()}
                 />
