@@ -2,7 +2,7 @@ import './App.css';
 import React from "react";
 import HistoricPlot from "./components/HistoricalPlot";
 import { jsonTransactions } from "./mockdata";
-import { parseTransactions, transactionBalance, categoryTotals } from "./Transaction"
+import TransactionsInfo from "./Transaction"
 import CategoryRadio from "./components/CategoryRadio";
 import DoughnutTransPlot from "./components/DoughnutTransPlot";
 
@@ -15,15 +15,12 @@ function defaultCategory(transactions) {
 class App extends React.Component {
     constructor(props) {
         super(props);
-        let transactions = parseTransactions(jsonTransactions)
-        let balance = transactionBalance(transactions)
-        let catTotals = categoryTotals(transactions)
-        let category = defaultCategory(transactions)
+        this.transactionsInfo = new TransactionsInfo(jsonTransactions)
         this.state = {
-            category: category,
-            transactions: transactions,
-            catTotals: catTotals,
-            balance: balance,
+            category: 'check',
+            transactions: this.transactionsInfo.transactions,
+            catTotals: this.transactionsInfo.totals,
+            balance: this.transactionsInfo.balance,
         }
         this.handleCategoryChange = this.handleCategoryChange.bind(this)
     }

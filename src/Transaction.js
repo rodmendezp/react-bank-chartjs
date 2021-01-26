@@ -10,57 +10,31 @@ class Transaction {
     }
 }
 
-export function transactionBalance(transactions) {
-    let balance = new Map(
-        [
-            ['check', 0],
-            ['natCred', 0],
-            ['intCred', 0]
-        ]
-    )
-    for (let [cat, trans] of transactions) {
-        for (let tran of trans) {
-            let amount = (cat !== 'intCred') ? tran.amount : tran.int_amount
-            balance.set(cat, balance.get(cat) + amount * categoryTransSign.get(cat).get(tran.type))
+class TransactionsInfo {
+    constructor(jsonTransactions) {
+        this.balance = new Map([['check', 0], ['natCred', 0], ['intCred', 0]])
+        this.transactions = new Map([['check', []], ['natCred', []], ['intCred', []]])
+        this.transTypes = new Map([['check', new Map()], ['natCred', new Map()], ['intCred', new Map()]])
+        this.totals = new Map([['check', new Map()], ['natCred', new Map()], ['intCred', new Map()]])
+        for (let jsonTrans of jsonTransactions) {
+            let t = new Transaction(jsonTrans)
+            if (CHECK_CATEGORIES.has(t.type)) this.addTransaction(t, 'check')
+            if (NAT_CRED_CATEGORIES.has(t.type)) this.addTransaction(t, 'natCred')
+            if (INT_CRED_CATEGORIES.has(t.type)) this.addTransaction(t, 'intCred')
         }
     }
-    return balance
-}
-
-export function categoryTotals(transactions) {
-    let totals = new Map([
-        ['check', new Map([])],
-        ['natCred', new Map([])],
-        ['intCred',new Map([])],
-    ])
-    for (let [cat, trans] of transactions) {
-        let catTotals = totals.get(cat)
-        for (let tran of trans) {
-            let curr = (catTotals.has(tran.type)) ? catTotals.get(tran.type) : 0
-            let amount = (cat !== 'intCred') ? tran.amount : tran.int_amount
-            catTotals.set(tran.type, curr + amount)
-        }
+    addTransaction(trans, category) {
+        let transAmount = (category !== 'intCred') ? trans.amount : trans.int_amount
+        let balanceAmount = transAmount * categoryTransSign.get(category).get(trans.type)
+        balanceAmount += this.balance.get(category)
+        this.balance.set(category, balanceAmount)
+        this.transactions.get(category).push(trans)
+        let catTransTypes = this.transTypes.get(category)
+        if (!catTransTypes.has(trans.type)) catTransTypes.set(trans.type, [])
+        this.transTypes.get(category).get(trans.type).push(trans)
+        let catTypeTotal = this.totals.get(category).get(trans.type) || 0
+        this.totals.get(category).set(trans.type, catTypeTotal + transAmount)
     }
-    return totals
 }
 
-export function parseTransactions(jsonTransactions) {
-    let checkTransactions = []
-    let natCredTransactions = []
-    let intCredTransactions = []
-
-    for (let i = 0; i < jsonTransactions.length; i++) {
-        const transaction = new Transaction(jsonTransactions[i])
-        if (CHECK_CATEGORIES.has(transaction.type))
-            checkTransactions.push(transaction)
-        if (NAT_CRED_CATEGORIES.has(transaction.type))
-            natCredTransactions.push(transaction)
-        if (INT_CRED_CATEGORIES.has(transaction.type))
-            intCredTransactions.push(transaction)
-    }
-    return new Map([
-        ['check', checkTransactions],
-        ['natCred', natCredTransactions],
-        ['intCred', intCredTransactions]
-    ])
-}
+export default TransactionsInfo;
