@@ -19,6 +19,7 @@ class App extends React.Component {
         this.state = {
             category: 'check',
             transactions: this.transactionsInfo.transactions,
+            transTypes: this.transactionsInfo.transTypes,
             catTotals: this.transactionsInfo.totals,
             balance: this.transactionsInfo.balance,
         }
@@ -39,7 +40,7 @@ class App extends React.Component {
             <div className="App">
                 <CategoryRadio category={this.state.category} onValueChange={this.handleCategoryChange}/>
                 <p>Balance: {this.formatBalance(this.state.balance, this.state.category)}</p>
-                <HistoricPlot transactions={this.state.transactions} category={this.state.category}/>
+                <HistoricPlot transTypes={this.state.transTypes} category={this.state.category}/>
                 <DoughnutTransPlot totals={this.state.catTotals.get(this.state.category)}/>
             </div>
         );

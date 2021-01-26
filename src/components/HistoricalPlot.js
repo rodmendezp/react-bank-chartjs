@@ -3,15 +3,17 @@ import { Scatter } from "react-chartjs-2";
 // eslint-disable-next-line no-unused-vars
 import * as Zoom from "chartjs-plugin-zoom";
 import * as consts from "../consts.js";
+import {categoryTransSign} from "../consts.js";
 
 class HistoricPlot extends React.Component {
     constructor(props) {
         super(props);
         this.divStyle = {
-            "max-width": "80%",
-            "margin": "auto"
+            maxWidth: "80%",
+            margin: "auto"
         }
         this.plotOptions = this.plotOptions.bind(this)
+        this.getDatasets = this.getDatasets.bind(this)
     }
     transactionToPlotData(transactions, category) {
         let data = transactions.get(category)
@@ -47,20 +49,29 @@ class HistoricPlot extends React.Component {
             }
         }
     }
-    render() {
-        let scatterData = {
-            datasets: [{
+    getDatasets(transTypes, category) {
+        let datasets = []
+        let categories = this.categoryTypes(category)
+        console.log(categories)
+        for (let [type, trans] of transTypes.get(category)) {
+            let color = categoryTransSign.get(category).get(type) > 0 ? "green" : "red"
+            let rotation = categoryTransSign.get(category).get(type) > 0 ? 0 : 180
+            datasets.push({
+                label: type,
                 borderColor: "rgba(0,0,0,1)",
                 borderWidth: 1,
-                pointBackgroundColor: (context) => {
-                    const index = context.dataIndex;
-                    const value = context.dataset.data[index];
-                    return value.y > 1 ? "red" : "green";
-                },
+                pointBackgroundColor: color,
                 pointStyle: 'triangle',
+                pointRotation: rotation,
                 pointRadius: 5,
-                data: this.transactionToPlotData(this.props.transactions, this.props.category)
-            }]
+                data: trans.map((t) => ({x: t.mail_dtime, y: categories.indexOf(t.type)}))
+            })
+        }
+        return datasets
+    }
+    render() {
+        let scatterData = {
+            datasets: this.getDatasets(this.props.transTypes, this.props.category)
         }
         return (
             <div style={this.divStyle}>
