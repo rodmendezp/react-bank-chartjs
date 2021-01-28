@@ -1,16 +1,10 @@
 import './App.css';
-import React from "react";
+import React, {Fragment} from "react";
 import HistoricPlot from "./components/HistoricalPlot";
 import { jsonTransactions } from "./mockdata";
 import TransactionsInfo from "./Transaction"
 import CategoryRadio from "./components/CategoryRadio";
 import DoughnutTransPlot from "./components/DoughnutTransPlot";
-
-function defaultCategory(transactions) {
-    if (transactions.get("check").length > 0) return "check"
-    else if (transactions.get("natCred").length > 0) return "natCred"
-    else return "intCred"
-}
 
 class App extends React.Component {
     constructor(props) {
@@ -20,8 +14,11 @@ class App extends React.Component {
         this.transTypes = this.transactionsInfo.transTypes
         this.catTotals = this.transactionsInfo.totals
         this.balance =  this.transactionsInfo.balance
+        let defaultCat
+        if (this.transactionsInfo.categories.length > 0) defaultCat = this.transactionsInfo.categories[0]
+        else defaultCat = null
         this.state = {
-            category: 'check',
+            category: defaultCat,
         }
         this.handleCategoryChange = this.handleCategoryChange.bind(this)
     }
@@ -38,10 +35,15 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <CategoryRadio category={this.state.category} onValueChange={this.handleCategoryChange}/>
-                <p>Balance: {this.formatBalance(this.balance, this.state.category)}</p>
-                <HistoricPlot transTypes={this.transTypes} category={this.state.category}/>
-                <DoughnutTransPlot totals={this.catTotals.get(this.state.category)}/>
+                {this.state.category ?
+                    <Fragment>
+                        <CategoryRadio category={this.state.category} onValueChange={this.handleCategoryChange}/>
+                        <p>Balance: {this.formatBalance(this.balance, this.state.category)}</p>
+                        <HistoricPlot transTypes={this.transTypes} category={this.state.category}/>
+                        <DoughnutTransPlot totals={this.catTotals.get(this.state.category)}/>
+                    </Fragment> :
+                    <h2>Transaction list is empty</h2>
+                }
             </div>
         );
     }
