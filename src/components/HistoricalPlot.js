@@ -12,8 +12,11 @@ class HistoricPlot extends React.Component {
             maxWidth: "80%",
             margin: "auto"
         }
+        let format = this.props.category === "intCred" ? 'en-US' : 'de-DE'
+        this.formatter = new Intl.NumberFormat(format)
         this.plotOptions = this.plotOptions.bind(this)
         this.getDatasets = this.getDatasets.bind(this)
+        this.renderTooltipLabel = this.renderTooltipLabel.bind(this)
     }
     transactionToPlotData(transactions, category) {
         let data = transactions.get(category)
@@ -26,6 +29,15 @@ class HistoricPlot extends React.Component {
         if (category === "natCred")
             return Array.from(consts.NAT_CRED_CATEGORIES)
         return Array.from(consts.INT_CRED_CATEGORIES)
+    }
+    renderTooltipLabel(tItem) {
+        let transTypes = this.props.transTypes.get(this.props.category)
+        let tType = this.categoryTypes(this.props.category)[tItem.yLabel]
+        let transfer = transTypes.get(tType)[tItem.index]
+        let label = []
+        label.push('Amount ' + this.formatter.format(transfer.amount))
+        label.push('Datetime: ' + tItem.xLabel)
+        return label
     }
     plotOptions() {
         return {
@@ -46,13 +58,18 @@ class HistoricPlot extends React.Component {
                         type: "time",
                         time: { minUnit: "day" },
                     }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: this.renderTooltipLabel
+                },
+                displayColors: false
             }
         }
     }
     getDatasets(transTypes, category) {
         let datasets = []
         let categories = this.categoryTypes(category)
-        console.log(categories)
         for (let [type, trans] of transTypes.get(category)) {
             let color = categoryTransSign.get(category).get(type) > 0 ? "green" : "red"
             let rotation = categoryTransSign.get(category).get(type) > 0 ? 0 : 180
