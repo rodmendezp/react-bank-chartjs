@@ -22,6 +22,8 @@ class TransactionsInfo {
             if (NAT_CRED_CATEGORIES.has(t.type)) this.addTransaction(t, 'natCred')
             if (INT_CRED_CATEGORIES.has(t.type)) this.addTransaction(t, 'intCred')
         }
+        this.categories = Array.from(this.transactions.keys())
+        this.categories = this.categories.filter(x => this.transactions.get(x).length > 0)
     }
     addTransaction(trans, category) {
         let transAmount = (category !== 'intCred') ? trans.amount : trans.int_amount
